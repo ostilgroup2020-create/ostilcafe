@@ -513,33 +513,33 @@
         </div>
       </div>
       <div class="reveal-right">
-        <div class="contact-form" id="contactForm">
+        <form class="contact-form" id="reservationForm">
           <div class="form-row">
             <div class="fg">
-              <label for="fname">Your Name</label>
-              <input type="text" id="fname" name="name" placeholder="John Doe" autocomplete="name" required>
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" placeholder="John Doe" autocomplete="name" required>
             </div>
             <div class="fg">
-              <label for="fphone">Phone</label>
-              <input type="tel" id="fphone" name="phone" placeholder="+977 98XXXXXXXX" autocomplete="tel">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" placeholder="+977 98XXXXXXXX" autocomplete="tel" required>
             </div>
           </div>
           <div class="fg">
-            <label for="femail">Email</label>
-            <input type="email" id="femail" name="email" placeholder="hello@email.com" autocomplete="email" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="hello@email.com" autocomplete="email" required>
           </div>
           <div class="fg">
-            <label for="fsubject">Subject</label>
-            <input type="text" id="fsubject" name="subject" placeholder="Table reservation, barista course...">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Table reservation, barista course...">
           </div>
           <div class="fg">
-            <label for="fmsg">Message</label>
-            <textarea id="fmsg" name="message" placeholder="Tell us how we can help..."></textarea>
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us how we can help..."></textarea>
           </div>
-          <button type="button" class="btn-primary" id="submitBtn" onclick="handleSubmit()" style="width:100%;justify-content:center;padding:15px 32px">
-            Send Message
+          <button type="submit" class="btn-primary" id="submitBtn" style="width:100%;justify-content:center;padding:15px 32px">
+            SEND MESSAGE
           </button>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -594,5 +594,49 @@
 
 <!-- JavaScript -->
 <script src="js/main.js"></script>
+<script>
+document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const submitButton = document.getElementById('submitBtn');
+    submitButton.innerText = 'SENDING...';
+    submitButton.disabled = true;
+
+    // Package your form values
+    const formData = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+    };
+
+    // Your live Make.com webhook link
+    const makeWebhookUrl = 'https://hook.eu1.make.com/y0yyc0tf276evymvfrasqtvc17b2jbu2';
+
+    try {
+        const response = await fetch(makeWebhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            alert('Thank you! Your message has been sent successfully.');
+            document.getElementById('reservationForm').reset();
+        } else {
+            alert('Submission failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Submission Error:', error);
+        alert('Network connection error.');
+    } finally {
+        submitButton.innerText = 'SEND MESSAGE';
+        submitButton.disabled = false;
+    }
+});
+</script>
 </body>
 </html>
