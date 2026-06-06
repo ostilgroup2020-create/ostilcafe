@@ -602,28 +602,44 @@ document.getElementById('reservationForm').addEventListener('submit', async func
     submitButton.innerText = 'SENDING...';
     submitButton.disabled = true;
 
-    // Build the request body using native URLSearchParams 
-    // This passes fields completely loose, mimicking your Buddha Web schema
-    const dataPayload = new URLSearchParams();
-    dataPayload.append('name', document.getElementById('name').value);
-    dataPayload.append('phone', document.getElementById('phone').value);
-    dataPayload.append('email', document.getElementById('email').value);
-    dataPayload.append('subject', document.getElementById('subject').value);
-    dataPayload.append('message', document.getElementById('message').value);
+    // 1. Gather your input values from your website fields
+    const n = document.getElementById('name').value.trim();
+    const p = document.getElementById('phone').value.trim();
+    const em = document.getElementById('email').value.trim();
+    const sv = document.getElementById('subject').value.trim();
+    const mg = document.getElementById('message').value.trim();
 
+    // 2. Validate empty slots
+    if (!n || !p || !em) {
+        alert('Please fill out Name, Phone, and Email.');
+        submitButton.innerText = 'SEND MESSAGE';
+        submitButton.disabled = false;
+        return;
+    }
+
+    // 3. Match your clean Buddha application/json schema structure
+    const payloadData = {
+        name: n,
+        phone: p,
+        email: em,
+        subject: sv,
+        message: mg
+    };
+
+    // Your active Make.com endpoint 
     const makeWebhookUrl = 'https://hook.eu1.make.com/y0yyc0tf276evymvfrasqtvc17b2jbu2';
 
     try {
-        await fetch(makeWebhookUrl, {
+        const response = await fetch(makeWebhookUrl, {
             method: 'POST',
-            mode: 'no-cors', // Native cross-domain request handling for GitHub Pages
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
-            body: dataPayload.toString()
+            body: JSON.stringify(payloadData)
         });
 
-        // Browsers handle no-cors transparently, so we assume transmission success here
+        // Clear layout on success
         alert('Thank you! Your message has been sent successfully.');
         document.getElementById('reservationForm').reset();
 
