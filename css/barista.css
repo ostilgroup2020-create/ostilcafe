@@ -1,0 +1,49 @@
+/* ═══════════════════════════════════════════════════════════════
+   OSTIL CAFÉ — BARISTA SECTION
+   ═══════════════════════════════════════════════════════════════ */
+#barista { padding:var(--section-gap) 0; background:var(--bg2) }
+.barista-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:center;
+}
+.barista-photos {
+  display:grid; grid-template-columns:1fr 1fr;
+  grid-template-rows:auto auto; gap:10px;
+}
+.barista-photo { border-radius:var(--radius); overflow:hidden }
+.barista-photo:first-child { grid-row:span 2 }
+.barista-photo img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .6s var(--ease-smooth);
+}
+.barista-photo:hover img { transform:scale(1.04) }
+.barista-photo:first-child img { height:460px }
+.barista-photo:not(:first-child) img { height:220px }
+.course-list {
+  display:flex; flex-direction:column;
+  gap:14px; margin-top:36px;
+}
+.course {
+  display:flex; gap:18px; align-items:flex-start;
+  padding:18px 22px; border:1px solid var(--border);
+  border-radius:var(--radius); background:var(--bg3);
+  transition:all .3s;
+}
+.course:hover {
+  border-color:var(--border2);
+  background:rgba(200,145,58,.03);
+  transform:translateX(6px);
+}
+.course-num {
+  font-family:'Playfair Display',serif;
+  font-size:1.7rem; color:var(--border2);
+  font-weight:900; line-height:1;
+  min-width:40px; transition:color .3s;
+}
+.course:hover .course-num { color:var(--gold) }
+.course-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem; color:var(--cream);
+  font-weight:600; margin-bottom:4px;
+}
+.course-desc { font-size:.8rem; color:var(--muted); line-height:1.65 }

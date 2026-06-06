@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════════════════════════
+   OSTIL CAFÉ — MENU SECTION
+   ═══════════════════════════════════════════════════════════════ */
+#menu { padding:var(--section-gap) 0; background:var(--bg2) }
+.menu-head {
+  display:flex; justify-content:space-between;
+  align-items:flex-end; margin-bottom:52px;
+  flex-wrap:wrap; gap:24px;
+}
+.menu-tabs {
+  display:flex; gap:3px;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--border);
+  border-radius:var(--radius); padding:3px;
+}
+.tab-btn {
+  background:none; border:none; padding:9px 18px;
+  font-size:.68rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--muted2);
+  border-radius:1px; transition:all .25s; font-weight:500;
+}
+.tab-btn.active,.tab-btn:hover { background:var(--gold); color:var(--bg) }
+.menu-panel { display:none }
+.menu-panel.active { display:block; animation:fadeUp .4s forwards }
+.menu-section-hd {
+  font-family:'Playfair Display',serif; font-size:1.5rem;
+  color:var(--gold); margin:0 0 26px; padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:12px;
+}
+.menu-section-hd::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(var(--border),transparent);
+}
+
+/* ─── MENU ITEM WITH IMAGE ─── */
+.menu-items {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:2px; margin-bottom:48px;
+}
+.menu-item {
+  padding:0; border:1px solid var(--border);
+  background:var(--bg3); overflow:hidden;
+  transition:all .3s; position:relative;
+}
+.menu-item:hover {
+  background:rgba(200,145,58,.045);
+  border-color:rgba(200,145,58,.28);
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+}
+.menu-item-img {
+  width:100%; height:180px; object-fit:cover;
+  transition:transform .5s var(--ease-smooth);
+}
+.menu-item:hover .menu-item-img { transform:scale(1.05) }
+.menu-item-body { padding:18px 22px }
+.menu-item-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem; color:var(--cream);
+  font-weight:600; margin-bottom:5px;
+}
+.menu-item-desc { font-size:.78rem; color:var(--muted); line-height:1.6 }
+.menu-item-footer {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:12px; padding-top:10px;
+  border-top:1px solid var(--border);
+}
+.menu-item-price {
+  font-family:'Playfair Display',serif;
+  font-size:1rem; color:var(--gold);
+  font-weight:700; white-space:nowrap;
+}
+.menu-item-tag {
+  font-size:.58rem; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--muted);
+  background:rgba(200,145,58,.06);
+  padding:3px 8px; border-radius:2px;
+}
+
+/* Items without image (text-only) */
+.menu-item.text-only { padding:18px 22px }
+.menu-item.text-only .menu-item-body { padding:0 }

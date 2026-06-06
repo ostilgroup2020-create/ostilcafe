@@ -1,0 +1,58 @@
+/* ═══════════════════════════════════════════════════════════════
+   OSTIL CAFÉ — RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════════════════════════ */
+
+@media(max-width:1024px) {
+  .about-grid,.barista-grid,.contact-grid { grid-template-columns:1fr; gap:50px }
+  .footer-grid { grid-template-columns:1fr 1fr; gap:40px }
+  .features-grid { grid-template-columns:1fr 1fr }
+  .gallery-grid { grid-template-columns:1fr 1fr; grid-template-rows:auto }
+  .gallery-cell:nth-child(1) { grid-column:span 2; height:320px }
+  .gallery-cell:nth-child(5) { grid-column:span 2 }
+  .gallery-cell { height:220px }
+  .barista-photos { grid-template-columns:1fr 1fr; grid-template-rows:auto }
+  .barista-photo:first-child { grid-row:span 1 }
+  .barista-photo:first-child img,.barista-photo:not(:first-child) img { height:240px }
+  .menu-items { grid-template-columns:repeat(auto-fill,minmax(260px,1fr)) }
+}
+
+@media(max-width:768px) {
+  :root { --section-gap:80px }
+  .container { padding:0 20px }
+  nav { padding:0 20px }
+  .nav-links { display:none }
+  .hamburger { display:flex }
+  .features-grid { grid-template-columns:1fr }
+  .about-images { grid-template-columns:1fr }
+  .about-img-sm:last-child { display:none }
+  .about-img-main { aspect-ratio:16/9 }
+  .about-badge { bottom:-12px; right:-6px; width:90px; height:90px }
+  .about-badge strong { font-size:1.5rem }
+  .menu-tabs { flex-wrap:wrap }
+  .menu-items { grid-template-columns:1fr }
+  .menu-item-img { height:200px }
+  .form-row { grid-template-columns:1fr }
+  .footer-grid { grid-template-columns:1fr }
+  .hero-btns { flex-direction:column; align-items:center }
+  .about-stats { grid-template-columns:1fr 1fr }
+  .gallery-grid { grid-template-columns:1fr 1fr; grid-template-rows:auto }
+  .gallery-cell { height:180px }
+  .gallery-cell:nth-child(1) { height:260px }
+  .barista-photos { grid-template-columns:1fr }
+  .barista-photo:first-child img,.barista-photo:not(:first-child) img { height:200px }
+  .barista-photo:nth-child(3) { display:none }
+  .quote-inner { padding:40px 24px }
+  .big-quote { font-size:5rem }
+  .menu-head { flex-direction:column; align-items:flex-start }
+}
+
+@media(max-width:480px) {
+  .hero-title { font-size:2.8rem }
+  .section-title { font-size:1.85rem }
+  .gallery-cell:nth-child(5) { grid-column:span 1 }
+  .gallery-cell { height:150px }
+  .gallery-cell:nth-child(1) { grid-column:span 2; height:200px }
+  .tab-btn { padding:8px 12px; font-size:.62rem }
+  .footer-bottom { flex-direction:column; text-align:center }
+  .menu-item-img { height:160px }
+}

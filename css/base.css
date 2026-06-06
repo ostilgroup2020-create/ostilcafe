@@ -1,0 +1,135 @@
+/* ═══════════════════════════════════════════════════════════════
+   OSTIL CAFÉ — BASE STYLES
+   Design tokens, reset, typography, scrollbar, utilities
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── CUSTOM PROPERTIES ─── */
+:root {
+  --bg: #080603;
+  --bg2: #0d0a06;
+  --bg3: #131009;
+  --bg4: #1a1510;
+  --gold: #fb0000;
+  --gold2: #c5483a;
+  --gold3: #f2e1c1;
+  --cream: #ffffff;
+  --text: #c8b89a;
+  --muted: #6e5f48;
+  --muted2: #9c8a72;
+  --border: rgba(200,145,58,0.18);
+  --border2: rgba(200,145,58,0.35);
+  --red: #9b2335;
+  --section-gap: 110px;
+  --radius: 2px;
+  --ease-smooth: cubic-bezier(.16,1,.3,1);
+}
+
+/* ─── RESET ─── */
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth; font-size:16px }
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Jost',sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+img { display:block; max-width:100%; height:auto }
+a { text-decoration:none; color:inherit }
+button { font-family:'Jost',sans-serif; cursor:pointer }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width:3px }
+::-webkit-scrollbar-track { background:var(--bg) }
+::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px }
+
+/* ─── CONTAINER ─── */
+.container { max-width:1240px; margin:0 auto; padding:0 40px }
+
+/* ─── SECTION UTILITIES ─── */
+.section-tag {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:.68rem; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--gold); font-weight:500; margin-bottom:14px;
+}
+.section-tag::before { content:''; width:28px; height:1px; background:var(--gold); opacity:.7 }
+.section-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,4vw,3rem);
+  color:var(--cream); line-height:1.15; margin-bottom:18px;
+}
+.section-title em { font-style:italic; color:var(--gold) }
+.section-body {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem; color:var(--muted2); line-height:1.85;
+}
+
+/* ─── BUTTONS ─── */
+.btn-primary {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--gold); color:var(--bg); border:none;
+  padding:13px 32px; font-size:.78rem; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase;
+  border-radius:var(--radius);
+  transition:background .3s,transform .2s,box-shadow .3s; cursor:pointer;
+}
+.btn-primary:hover {
+  background:var(--gold2); transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(200,145,58,.3);
+}
+.btn-outline {
+  display:inline-flex; align-items:center; gap:8px;
+  background:transparent; color:var(--cream);
+  border:1px solid rgba(245,234,216,.25);
+  padding:13px 32px; font-size:.78rem; font-weight:500;
+  letter-spacing:.15em; text-transform:uppercase;
+  border-radius:var(--radius); transition:all .3s;
+}
+.btn-outline:hover { border-color:var(--gold); color:var(--gold) }
+
+/* ─── REVEAL ANIMATIONS ─── */
+.reveal {
+  opacity:0; transform:translateY(36px);
+  transition:opacity .9s var(--ease-smooth),transform .9s var(--ease-smooth);
+}
+.reveal.visible { opacity:1; transform:none }
+.reveal-left {
+  opacity:0; transform:translateX(-40px);
+  transition:opacity .9s var(--ease-smooth),transform .9s var(--ease-smooth);
+}
+.reveal-left.visible { opacity:1; transform:none }
+.reveal-right {
+  opacity:0; transform:translateX(40px);
+  transition:opacity .9s var(--ease-smooth),transform .9s var(--ease-smooth);
+}
+.reveal-right.visible { opacity:1; transform:none }
+
+/* ─── DIVIDER ─── */
+.ornament-divider {
+  text-align:center; padding:10px 0;
+  color:var(--gold); font-size:1.2rem;
+  opacity:.5; letter-spacing:12px;
+}
+
+/* ─── KEYFRAMES ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(28px) }
+  to { opacity:1; transform:none }
+}
+@keyframes blink {
+  0%,100% { opacity:1 }
+  50% { opacity:.25 }
+}
+@keyframes float {
+  0%,100% { transform:translateY(0) }
+  50% { transform:translateY(-8px) }
+}
+@keyframes shimmer {
+  0% { background-position:-200% center }
+  100% { background-position:200% center }
+}
+@keyframes pulse-glow {
+  0%,100% { box-shadow:0 0 20px rgba(200,145,58,0.2) }
+  50% { box-shadow:0 0 40px rgba(200,145,58,0.4) }
+}
