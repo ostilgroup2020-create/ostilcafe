@@ -596,61 +596,174 @@
 <script src="js/main.js"></script>
 <script>
 document.getElementById('reservationForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const submitButton = document.getElementById('submitBtn');
-    submitButton.innerText = 'SENDING...';
-    submitButton.disabled = true;
+  const btn = document.getElementById('submitBtn');
+  const n   = document.getElementById('name').value.trim();
+  const p   = document.getElementById('phone').value.trim();
+  const em  = document.getElementById('email').value.trim();
+  const sv  = document.getElementById('subject').value.trim();
+  const mg  = document.getElementById('message').value.trim();
 
-    // 1. Gather your input values from your website fields
-    const n = document.getElementById('name').value.trim();
-    const p = document.getElementById('phone').value.trim();
-    const em = document.getElementById('email').value.trim();
-    const sv = document.getElementById('subject').value.trim();
-    const mg = document.getElementById('message').value.trim();
-
-    // 2. Validate empty slots
-    if (!n || !p || !em) {
-        alert('Please fill out Name, Phone, and Email.');
-        submitButton.innerText = 'SEND MESSAGE';
-        submitButton.disabled = false;
-        return;
+  /* ── inline error labels under each field ── */
+  function getErrEl(inputId) {
+    const input = document.getElementById(inputId);
+    let err = document.getElementById(inputId + '-err');
+    if (!err) {
+      err = document.createElement('span');
+      err.id = inputId + '-err';
+      err.style.cssText = 'display:none;color:#ef4444;font-size:11px;letter-spacing:.05em;margin-top:4px;font-family:var(--font-body,sans-serif);';
+      input.parentNode.appendChild(err);
     }
+    return err;
+  }
+  function showErr(inputId, msg) {
+    const input = document.getElementById(inputId);
+    const err   = getErrEl(inputId);
+    err.textContent  = msg;
+    err.style.display = 'block';
+    input.style.borderBottomColor = '#ef4444';
+  }
+  function clearErr(inputId) {
+    const input = document.getElementById(inputId);
+    const err   = getErrEl(inputId);
+    err.style.display = 'none';
+    input.style.borderBottomColor = '';
+  }
+  function clearAll() {
+    ['name','phone','email','message'].forEach(clearErr);
+  }
 
-    // 3. Match your clean Buddha application/json schema structure
-    const payloadData = {
-        name: n,
-        phone: p,
-        email: em,
-        subject: sv,
-        message: mg
-    };
-
-    // Your active Make.com endpoint 
-    const makeWebhookUrl = 'https://hook.eu1.make.com/y0yyc0tf276evymvfrasqtvc17b2jbu2';
-
-    try {
-        const response = await fetch(makeWebhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(payloadData)
-        });
-
-        // Clear layout on success
-        alert('Thank you! Your message has been sent successfully.');
-        document.getElementById('reservationForm').reset();
-
-    } catch (error) {
-        console.error('Submission Error:', error);
-        alert('Network connection error. Please try again.');
-    } finally {
-        submitButton.innerText = 'SEND MESSAGE';
-        submitButton.disabled = false;
+  /* ── button state helper ── */
+  function setState(state, msg) {
+    btn.disabled = state !== 'idle';
+    btn.style.transition = 'background .3s, color .3s';
+    if (state === 'idle') {
+      btn.style.background = '';
+      btn.style.color      = '';
+      btn.innerHTML        = 'SEND MESSAGE';
+    } else if (state === 'sending') {
+      btn.style.background = '#6b7280';
+      btn.style.color      = '#fff';
+      btn.innerHTML        = '<span style="display:inline-flex;align-items:center;gap:8px"><svg style="animation:spin .7s linear infinite;width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> SENDING...</span>';
+    } else if (state === 'success') {
+      btn.style.background = '#16a34a';
+      btn.style.color      = '#fff';
+      btn.innerHTML        = '<span style="display:inline-flex;align-items:center;gap:8px">&#10003; MESSAGE SENT!</span>';
+    } else if (state === 'error') {
+      btn.style.background = '#dc2626';
+      btn.style.color      = '#fff';
+      btn.innerHTML        = 'CONNECTION FAILED — RETRY';
+    } else if (state === 'invalid') {
+      btn.style.background = '#b91c1c';
+      btn.style.color      = '#fff';
+      btn.innerHTML        = msg || 'INVALID DETAILS — CHECK FIELDS';
     }
+  }
+
+  /* ══════════════════════════════
+     VALIDATION RULES
+  ══════════════════════════════ */
+  clearAll();
+  let hasError = false;
+
+  /* Name — at least 2 chars, letters/spaces only */
+  if (!n) {
+    showErr('name', 'Name is required.');
+    hasError = true;
+  } else if (n.length < 2) {
+    showErr('name', 'Enter a valid name (at least 2 characters).');
+    hasError = true;
+  } else if (!/^[a-zA-Zऀ-ॿ\s.'-]+$/.test(n)) {
+    showErr('name', 'Name should contain letters only.');
+    hasError = true;
+  }
+
+  /* Phone — digits only, 7–15 chars (covers Nepal & international) */
+  const pClean = p.replace(/[\s\-\(\)\+]/g, '');
+  if (!p) {
+    showErr('phone', 'Phone number is required.');
+    hasError = true;
+  } else if (!/^\d{7,15}$/.test(pClean)) {
+    showErr('phone', 'Enter a valid phone number (7–15 digits).');
+    hasError = true;
+  }
+
+  /* Email — standard format */
+  if (!em) {
+    showErr('email', 'Email address is required.');
+    hasError = true;
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) {
+    showErr('email', 'Enter a valid email address (e.g. name@email.com).');
+    hasError = true;
+  }
+
+  /* Message — at least 5 chars + gibberish/spam detection */
+  function isGibberish(text) {
+    const clean = text.toLowerCase().replace(/[^a-z]/g, '');
+    if (clean.length === 0) return false;
+    // Vowel ratio too low = keyboard smashing (e.g. asdfgh, qwerty)
+    const vowels = clean.match(/[aeiou]/g);
+    const vowelRatio = vowels ? vowels.length / clean.length : 0;
+    // Repeated character check (e.g. aaaaaaa, zzzzz)
+    const hasRepeats = /(.){4,}/.test(clean);
+    // Any single word longer than 20 chars = likely spam
+    const hasLongWord = text.split(/\s+/).some(w => w.length > 20);
+    // Consecutive keyboard row pattern (qwerty / asdf / zxcv)
+    const keyboardRows = ['qwertyuiop','asdfghjkl','zxcvbnm'];
+    const hasKeyboard = keyboardRows.some(row => {
+      for (let i = 0; i <= clean.length - 5; i++) {
+        const chunk = clean.slice(i, i + 5);
+        if (row.includes(chunk)) return true;
+      }
+      return false;
+    });
+    return vowelRatio < 0.12 || hasRepeats || hasLongWord || hasKeyboard;
+  }
+
+  if (!mg) {
+    showErr('message', 'Message is required.');
+    hasError = true;
+  } else if (mg.length < 5) {
+    showErr('message', 'Message is too short — please say a bit more.');
+    hasError = true;
+  } else if (isGibberish(mg)) {
+    showErr('message', 'Please enter a real message — no gibberish or spam.');
+    hasError = true;
+  }
+
+  if (hasError) {
+    setState('invalid');
+    setTimeout(() => setState('idle'), 2500);
+    return;
+  }
+
+  /* ── all good — send ── */
+  setState('sending');
+
+  const makeWebhookUrl = 'https://hook.eu1.make.com/y0yyc0tf276evymvfrasqtvc17b2jbu2';
+
+  try {
+    await fetch(makeWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name: n, phone: p, email: em, subject: sv, message: mg })
+    });
+    setState('success');
+    clearAll();
+    document.getElementById('reservationForm').reset();
+    setTimeout(() => setState('idle'), 3500);
+  } catch (err) {
+    console.error('Submission error:', err);
+    setState('error');
+    setTimeout(() => setState('idle'), 3500);
+  }
 });
 </script>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+#submitBtn { cursor: pointer; border-radius: 0; letter-spacing: .15em; font-size: .75rem; font-weight: 600; }
+</style>
 </body>
 </html>
