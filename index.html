@@ -602,27 +602,28 @@ document.getElementById('reservationForm').addEventListener('submit', async func
     submitButton.innerText = 'SENDING...';
     submitButton.disabled = true;
 
-    // Convert variables to URL parameters to completely bypass CORS security checks
-    const searchParams = new URLSearchParams();
-    searchParams.append('name', document.getElementById('name').value);
-    searchParams.append('phone', document.getElementById('phone').value);
-    searchParams.append('email', document.getElementById('email').value);
-    searchParams.append('subject', document.getElementById('subject').value);
-    searchParams.append('message', document.getElementById('message').value);
+    // Build the request body using native URLSearchParams 
+    // This passes fields completely loose, mimicking your Buddha Web schema
+    const dataPayload = new URLSearchParams();
+    dataPayload.append('name', document.getElementById('name').value);
+    dataPayload.append('phone', document.getElementById('phone').value);
+    dataPayload.append('email', document.getElementById('email').value);
+    dataPayload.append('subject', document.getElementById('subject').value);
+    dataPayload.append('message', document.getElementById('message').value);
 
     const makeWebhookUrl = 'https://hook.eu1.make.com/y0yyc0tf276evymvfrasqtvc17b2jbu2';
 
     try {
         await fetch(makeWebhookUrl, {
             method: 'POST',
-            mode: 'no-cors', // Native cross-origin data push
+            mode: 'no-cors', // Native cross-domain request handling for GitHub Pages
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded' // Change to simple content type
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: searchParams.toString()
+            body: dataPayload.toString()
         });
 
-        // Because of no-cors, we assume execution success if no network crash occurred
+        // Browsers handle no-cors transparently, so we assume transmission success here
         alert('Thank you! Your message has been sent successfully.');
         document.getElementById('reservationForm').reset();
 
